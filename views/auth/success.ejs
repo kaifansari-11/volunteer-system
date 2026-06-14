@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .success-page {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b, #1a1040);
+      padding: 20px;
+    }
+    .success-card {
+      background: white;
+      border-radius: 20px;
+      padding: 56px 48px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+    }
+    .checkmark {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+      color: white;
+      margin: 0 auto 24px;
+      animation: pop 0.4s ease;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    h1 { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; color: #0f172a; margin-bottom: 12px; }
+    p { color: #64748b; line-height: 1.7; margin-bottom: 32px; }
+    .steps { background: #f8fafc; border-radius: 12px; padding: 20px; text-align: left; margin-bottom: 28px; }
+    .step { display: flex; align-items: flex-start; gap: 12px; padding: 8px 0; }
+    .step-num {
+      width: 24px; height: 24px;
+      background: #2563eb;
+      color: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 2px;
+    }
+    .step-text { font-size: 14px; color: #334155; }
+  </style>
+</head>
+<body>
+<div class="success-page">
+  <div class="success-card">
+    <div class="checkmark"><i class="fa-solid fa-check"></i></div>
+    <h1>You're Registered!</h1>
+    <p>Thank you for signing up as a volunteer. We've sent a confirmation email to your inbox. Our team will review your application shortly.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Check your email for a confirmation message</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Our admin team reviews your profile (usually within 24hrs)</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Once approved, you can join events and log hours!</div>
+      </div>
+    </div>
+
+    <a href="/auth/login" class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;font-size:15px;">
+      Go to Login <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+    </a>
+  </div>
+</div>
+</body>
+</html>

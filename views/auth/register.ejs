@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-card" style="max-width:520px;">
+    <div class="auth-logo">
+      <div class="logo-icon"><i class="fa-solid fa-handshake-angle"></i></div>
+      VolunteerHub
+    </div>
+    <p class="auth-subtitle">Join us and start making a difference today</p>
+
+    <% if (error && error.length) { %>
+      <div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div>
+    <% } %>
+
+    <form action="/auth/register" method="POST">
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="name" class="form-control" placeholder="Ravi Sharma" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email *</label>
+          <input type="email" name="email" class="form-control" placeholder="ravi@email.com" required>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" name="password" class="form-control" placeholder="Min 6 characters" required minlength="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone</label>
+          <input type="tel" name="phone" class="form-control" placeholder="+91 9876543210">
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Age</label>
+          <input type="number" name="age" class="form-control" placeholder="25" min="16" max="80">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Availability</label>
+          <select name="availability" class="form-control">
+            <option value="">Select...</option>
+            <option value="Weekdays">Weekdays</option>
+            <option value="Weekends">Weekends</option>
+            <option value="Mornings">Mornings</option>
+            <option value="Evenings">Evenings</option>
+            <option value="Flexible">Flexible</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Skills (Select all that apply)</label>
+        <div class="skills-grid mt-8">
+          <% ['Teaching', 'Medical', 'Tech & IT', 'Design', 'Cooking', 'Driving', 'Fundraising', 'Event Management', 'Counseling', 'Photography', 'Social Media', 'Translation'].forEach(skill => { %>
+            <div>
+              <input type="checkbox" name="skills" id="skill-<%= skill %>" value="<%= skill %>" class="skill-check">
+              <label for="skill-<%= skill %>"><%= skill %></label>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; padding:12px; margin-top:8px;">
+        Register as Volunteer <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i>
+      </button>
+    </form>
+
+    <div class="auth-divider"><span>Already have an account?</span></div>
+    <a href="/auth/login" class="btn btn-ghost" style="width:100%; justify-content:center;">Sign in instead</a>
+  </div>
+</div>
+</body>
+</html>

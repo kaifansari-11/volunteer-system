@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <%- include('../partials/sidebar-admin') %>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">Admin Dashboard</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <div class="stats-grid">
+        <div class="stat-card blue">
+          <div class="stat-label">Total Volunteers</div>
+          <div class="stat-value"><%= stats.total %></div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value"><%= stats.approved %></div>
+        </div>
+        <div class="stat-card yellow">
+          <div class="stat-label">Pending Review</div>
+          <div class="stat-value"><%= stats.pending %></div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-label">New Today</div>
+          <div class="stat-value"><%= stats.newToday %></div>
+        </div>
+      </div>
+
+      <div class="grid-2 mt-8">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Recent Registrations</div></div>
+          <div class="card-body">
+            <div class="table-wrapper">
+              <table>
+                <thead><tr><th>Name</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody>
+                  <% recentVolunteers.forEach(v => { %>
+                    <tr>
+                      <td>
+                        <div class="vol-name"><%= v.name %></div>
+                        <div class="vol-email"><%= v.email %></div>
+                      </td>
+                      <td><span class="badge badge-<%= v.status %>"><%= v.status %></span></td>
+                      <td><a href="/admin/volunteers/<%= v.id %>" class="btn btn-ghost btn-sm">Review</a></td>
+                    </tr>
+                  <% }) %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header"><div class="card-title">Top Skills Required</div></div>
+          <div class="card-body">
+            <% topSkills.forEach(([skill, count]) => { %>
+              <div style="display:flex; justify-content:space-between; margin-bottom: 12px; border-bottom: 1px solid var(--slate-100); padding-bottom: 8px;">
+                <span style="font-weight: 500; color: var(--slate-700);"><%= skill %></span>
+                <span class="badge badge-approved"><%= count %> Volunteers</span>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('active');
+  });
+  document.getElementById('mobileOverlay').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+  });
+</script>
+</body>
+</html>

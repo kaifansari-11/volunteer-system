@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <%- include('../partials/sidebar-volunteer') %>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">My Profile</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <% if (error && error.length) { %><div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div><% } %>
+      <% if (success && success.length) { %><div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div><% } %>
+
+      <div class="card" style="max-width:640px;">
+        <div class="card-header">
+          <div class="card-title">Edit Your Profile</div>
+          <% if (volunteer) { %>
+            <span class="badge badge-<%= volunteer.status %>"><%= volunteer.status %></span>
+          <% } %>
+        </div>
+        <div class="card-body">
+          <form action="/volunteer/profile" method="POST">
+            <div style="display:flex;gap:16px;align-items:center;margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--slate-100);">
+              <div style="width:64px;height:64px;background:linear-gradient(135deg,var(--blue),var(--purple));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:26px;font-weight:700;flex-shrink:0;">
+                <%= user.name.charAt(0).toUpperCase() %>
+              </div>
+              <div>
+                <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px;color:var(--slate-900);"><%= user.name %></div>
+                <div class="text-muted"><%= user.email %></div>
+                <div class="text-muted">Member since <%= volunteer ? new Date(volunteer.created_at).toLocaleDateString('en-IN',{year:'numeric',month:'long'}) : '–' %></div>
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div class="form-group">
+                <label class="form-label">Phone</label>
+                <input type="tel" name="phone" class="form-control" value="<%= volunteer ? volunteer.phone || '' : '' %>">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Age</label>
+                <input type="number" name="age" class="form-control" value="<%= volunteer ? volunteer.age || '' : '' %>" min="16" max="80">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Availability</label>
+              <select name="availability" class="form-control">
+                <% ['Weekdays','Weekends','Mornings','Evenings','Flexible'].forEach(opt => { %>
+                  <option value="<%= opt %>" <%= volunteer && volunteer.availability === opt ? 'selected' : '' %>><%= opt %></option>
+                <% }) %>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Skills</label>
+              <div class="skills-grid mt-8">
+                <% const mySkills = volunteer && volunteer.skills ? volunteer.skills.split(',').map(s=>s.trim()) : [] %>
+                <% ['Teaching', 'Medical', 'Tech & IT', 'Design', 'Cooking', 'Driving', 'Fundraising', 'Event Management', 'Counseling', 'Photography', 'Social Media', 'Translation'].forEach(skill => { %>
+                  <div>
+                    <input type="checkbox" name="skills" id="ps-<%= skill %>" value="<%= skill %>" class="skill-check" <%= mySkills.includes(skill) ? 'checked' : '' %>>
+                    <label for="ps-<%= skill %>"><%= skill %></label>
+                  </div>
+                <% }) %>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('active');
+  });
+  document.getElementById('mobileOverlay').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <%- include('../partials/sidebar-volunteer') %>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">Welcome back, <%= user.name.split(' ')[0] %></div>
+      </div>
+    </div>
+    <div class="page-content">
+      <% if (error && error.length) { %><div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div><% } %>
+      <% if (success && success.length) { %><div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div><% } %>
+
+      <% if (volunteer) { %>
+        <% const statusColors = { pending: 'yellow', approved: 'green', rejected: 'red' } %>
+        <div class="card mb-20" style="border-left: 4px solid var(--<%= statusColors[volunteer.status] || 'blue' %>);">
+          <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:16px;">
+            <div>
+              <div style="font-size:13px;color:var(--slate-500);margin-bottom:4px;">Application Status</div>
+              <span class="badge badge-<%= volunteer.status %>"><%= volunteer.status %></span>
+              <% if (volunteer.status === 'pending') { %>
+                <span class="text-muted" style="margin-left:8px;">Under review — we'll notify you by email</span>
+              <% } else if (volunteer.status === 'approved') { %>
+                <span class="text-muted" style="margin-left:8px;">You're all set! Join events and start contributing.</span>
+              <% } %>
+            </div>
+            <a href="/volunteer/profile" class="btn btn-ghost btn-sm">View Profile</a>
+          </div>
+        </div>
+
+        <div class="stats-grid mb-28">
+          <div class="stat-card blue">
+            <div class="stat-label">Hours Logged</div>
+            <div class="stat-value"><%= volunteer.hours_logged || 0 %></div>
+            <div class="stat-sub">Total volunteer hours</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Skills</div>
+            <div class="stat-value"><%= volunteer.skills ? volunteer.skills.split(',').length : 0 %></div>
+            <div class="stat-sub">Skills registered</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-label">Status</div>
+            <div class="stat-value" style="font-size:20px;text-transform:capitalize;padding-top:4px;"><%= volunteer.status %></div>
+            <div class="stat-sub">Application status</div>
+          </div>
+        </div>
+      <% } %>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">My Skills</div>
+            <a href="/volunteer/profile" class="btn btn-ghost btn-sm">Edit</a>
+          </div>
+          <div class="card-body">
+            <% if (volunteer && volunteer.skills) { %>
+              <% volunteer.skills.split(',').forEach(skill => { %>
+                <span class="skill-tag"><%= skill.trim() %></span>
+              <% }) %>
+            <% } else { %>
+              <p class="text-muted">No skills added yet. <a href="/volunteer/profile">Add skills <i class="fa-solid fa-arrow-right"></i></a></p>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Notifications</div>
+          </div>
+          <div class="card-body">
+            <% if (notifications && notifications.length) { %>
+              <% notifications.forEach(n => { %>
+                <div style="padding:10px 0;border-bottom:1px solid var(--slate-100);font-size:13px;color:var(--slate-700);">
+                  <%= n.message %>
+                  <div class="text-muted" style="margin-top:2px;font-size:11px;"><%= new Date(n.created_at).toLocaleDateString() %></div>
+                </div>
+              <% }) %>
+            <% } else { %>
+              <p class="text-muted">No notifications yet.</p>
+            <% } %>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px;">
+        <div class="card-header">
+          <div class="card-title">My Upcoming Events</div>
+          <a href="/volunteer/events" class="btn btn-ghost btn-sm">Browse all</a>
+        </div>
+        <div class="card-body">
+          <% if (upcomingEvents && upcomingEvents.length) { %>
+            <% upcomingEvents.forEach(e => { %>
+              <div style="padding:12px 0;border-bottom:1px solid var(--slate-100);">
+                <div style="font-weight:600;color:var(--slate-900)"><%= e.title %></div>
+                <div class="text-muted"><i class="fa-regular fa-calendar"></i> <%= new Date(e.event_date).toDateString() %> &nbsp;|&nbsp; <i class="fa-solid fa-location-dot"></i> <%= e.location %></div>
+              </div>
+            <% }) %>
+          <% } else { %>
+            <div class="empty-state" style="padding:24px 20px;">
+              <div>You haven't joined any events yet.</div>
+              <a href="/volunteer/events" class="btn btn-primary btn-sm" style="margin-top:12px;">Browse Events</a>
+            </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('active');
+  });
+  document.getElementById('mobileOverlay').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+  });
+</script>
+</body>
+</html>

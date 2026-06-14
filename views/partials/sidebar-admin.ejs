@@ -1,0 +1,36 @@
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <a href="/admin/dashboard" class="brand-logo">
+      <span><i class="fa-solid fa-handshake-angle" style="font-size: 16px;"></i></span> VolunteerHub
+    </a>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-label">Admin Panel</div>
+      <a href="/admin/dashboard" class="nav-link <%= title.includes('Dashboard') ? 'active' : '' %>">
+        <span class="icon"><i class="fa-solid fa-chart-simple"></i></span> Dashboard
+      </a>
+      <a href="/admin/volunteers" class="nav-link <%= title.includes('Manage') ? 'active' : '' %>">
+        <span class="icon"><i class="fa-solid fa-users"></i></span> Volunteers
+      </a>
+      <a href="/admin/events" class="nav-link <%= title.includes('Events') ? 'active' : '' %>">
+        <span class="icon"><i class="fa-regular fa-calendar"></i></span> Events
+      </a>
+      <a href="/admin/export" class="nav-link">
+        <span class="icon"><i class="fa-solid fa-file-export"></i></span> Export CSV
+      </a>
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar"><%= user.name.charAt(0).toUpperCase() %></div>
+      <div class="user-details">
+        <div class="user-name"><%= user.name %></div>
+        <div class="user-role">Admin</div>
+      </div>
+    </div>
+    <form action="/auth/logout" method="POST" class="logout-form" style="margin-top:8px;">
+      <button type="submit" class="logout-btn"><span><i class="fa-solid fa-arrow-right-from-bracket"></i></span> Sign Out</button>
+    </form>
+  </div>
+</aside>

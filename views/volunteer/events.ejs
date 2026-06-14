@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <%- include('../partials/sidebar-volunteer') %>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">Browse Events</div>
+      </div>
+    </div>
+    <div class="page-content">
+      <% if (error && error.length) { %><div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div><% } %>
+      <% if (success && success.length) { %><div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div><% } %>
+
+      <div class="grid-2">
+        <% if(events && events.length) { %>
+          <% events.forEach(e => { %>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title"><%= e.title %></div>
+              </div>
+              <div class="card-body">
+                <div class="text-muted mb-8"><i class="fa-regular fa-calendar"></i> <%= new Date(e.event_date).toDateString() %></div>
+                <div class="text-muted mb-8"><i class="fa-solid fa-location-dot"></i> <%= e.location %></div>
+                <p style="font-size: 14px; margin-bottom: 16px; color: var(--slate-700);"><%= e.description %></p>
+                
+                <% if(e.required_skills) { %>
+                  <div style="margin-bottom: 16px;">
+                    <strong style="font-size: 12px; color: var(--slate-500);">Needed Skills:</strong><br>
+                    <div class="mt-8">
+                      <% e.required_skills.split(',').forEach(s => { %>
+                        <span class="skill-tag"><%= s.trim() %></span>
+                      <% }) %>
+                    </div>
+                  </div>
+                <% } %>
+
+                <form action="/volunteer/events/<%= e.id %>/join" method="POST">
+                  <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Join Event</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        <% } else { %>
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-icon"><i class="fa-solid fa-leaf"></i></div>
+            <h3>No upcoming events right now</h3>
+            <p>Check back later for new opportunities to help out!</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('active');
+  });
+  document.getElementById('mobileOverlay').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+  });
+</script>
+</body>
+</html>

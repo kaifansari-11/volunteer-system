@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <%- include('../partials/sidebar-admin') %>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">Manage Volunteers</div>
+      </div>
+      <div class="topbar-actions">
+        <a href="/admin/export" class="btn btn-success"><i class="fa-solid fa-download"></i> Export CSV</a>
+      </div>
+    </div>
+    <div class="page-content">
+      <% if (success && success.length) { %><div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div><% } %>
+      
+      <div class="card mb-20">
+        <div class="card-body">
+          <form method="GET" action="/admin/volunteers" class="grid-3" style="align-items: end;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Search Name/Email</label>
+              <input type="text" name="search" class="form-control" value="<%= filters.search || '' %>" placeholder="Search...">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label">Filter by Status</label>
+              <select name="status" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="approved" <%= filters.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Filter Results</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Volunteer Info</th>
+                <th>Phone</th>
+                <th>Skills</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% volunteers.forEach(v => { %>
+                <tr>
+                  <td>
+                    <div class="vol-name"><%= v.name %></div>
+                    <div class="vol-email"><%= v.email %></div>
+                  </td>
+                  <td><%= v.phone || 'N/A' %></td>
+                  <td>
+                    <% if(v.skills) { %>
+                      <% v.skills.split(',').slice(0, 2).forEach(s => { %>
+                        <span class="skill-tag"><%= s.trim() %></span>
+                      <% }) %>
+                      <% if(v.skills.split(',').length > 2) { %>
+                        <span class="skill-tag">+<%= v.skills.split(',').length - 2 %></span>
+                      <% } %>
+                    <% } %>
+                  </td>
+                  <td><span class="badge badge-<%= v.status %>"><%= v.status %></span></td>
+                  <td>
+                    <a href="/admin/volunteers/<%= v.id %>" class="btn btn-ghost btn-sm">View Profile</a>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('active');
+  });
+  document.getElementById('mobileOverlay').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="layout">
+  <%- include('../partials/sidebar-admin') %>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="main-content">
+    <div class="topbar">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <button class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-title">
+          <a href="/admin/volunteers" style="color: var(--slate-500); text-decoration: none;"><i class="fa-solid fa-arrow-left"></i> Back</a> 
+          &nbsp;|&nbsp; <%= volunteer.name %>'s Profile
+        </div>
+      </div>
+    </div>
+    <div class="page-content">
+      <% if (error && error.length) { %><div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <%= error[0] %></div><% } %>
+      <% if (success && success.length) { %><div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <%= success[0] %></div><% } %>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">Volunteer Information</div>
+            <span class="badge badge-<%= volunteer.status %>"><%= volunteer.status %></span>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 16px;"><strong>Email:</strong> <%= volunteer.email %></div>
+            <div style="margin-bottom: 16px;"><strong>Phone:</strong> <%= volunteer.phone || 'N/A' %></div>
+            <div style="margin-bottom: 16px;"><strong>Age:</strong> <%= volunteer.age || 'N/A' %></div>
+            <div style="margin-bottom: 16px;"><strong>Availability:</strong> <%= volunteer.availability || 'N/A' %></div>
+            <div style="margin-bottom: 16px;">
+              <strong>Skills:</strong><br>
+              <div class="mt-8">
+                <% if(volunteer.skills) { %>
+                  <% volunteer.skills.split(',').forEach(s => { %>
+                    <span class="skill-tag"><%= s.trim() %></span>
+                  <% }) %>
+                <% } else { %>
+                  <span class="text-muted">No skills listed</span>
+                <% } %>
+              </div>
+            </div>
+            <hr style="border:0; border-top:1px solid var(--slate-100); margin: 20px 0;">
+            <form action="/admin/volunteers/<%= volunteer.id %>/status" method="POST">
+              <label class="form-label">Update Status</label>
+              <div style="display: flex; gap: 10px;">
+                <select name="status" class="form-control" style="width: auto;">
+                  <option value="pending" <%= volunteer.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                  <option value="approved" <%= volunteer.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                  <option value="rejected" <%= volunteer.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div>
+          <div class="card mb-20">
+            <div class="card-header"><div class="card-title">Admin Notes</div></div>
+            <div class="card-body">
+              <form action="/admin/volunteers/<%= volunteer.id %>/notes" method="POST">
+                <textarea name="notes" class="form-control" placeholder="Add internal notes about this volunteer..."><%= volunteer.admin_notes || '' %></textarea>
+                <button type="submit" class="btn btn-success mt-8">Save Notes</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card mb-20">
+            <div class="card-header">
+              <div class="card-title">Log Hours</div>
+              <div class="badge badge-approved"><%= volunteer.hours_logged %> Total Hours</div>
+            </div>
+            <div class="card-body">
+              <form action="/admin/volunteers/<%= volunteer.id %>/hours" method="POST" style="display: flex; gap: 10px; align-items: end;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Add Hours</label>
+                  <input type="number" name="hours" class="form-control" required min="1" max="100">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header"><div class="card-title">Recent Activity</div></div>
+            <div class="card-body" style="max-height: 200px; overflow-y: auto;">
+              <% if(logs && logs.length) { %>
+                <% logs.forEach(log => { %>
+                  <div style="padding: 10px 0; border-bottom: 1px solid var(--slate-100); font-size: 13px;">
+                    <strong><%= log.admin_name || 'System' %></strong>: <%= log.details %>
+                    <div class="text-muted" style="font-size: 11px;"><%= new Date(log.created_at).toLocaleString() %></div>
+                  </div>
+                <% }) %>
+              <% } else { %>
+                <p class="text-muted">No activity logs yet.</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('menuToggle').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.add('open');
+    document.getElementById('mobileOverlay').classList.add('active');
+  });
+  document.getElementById('mobileOverlay').addEventListener('click', () => {
+    document.querySelector('.sidebar').classList.remove('open');
+    document.getElementById('mobileOverlay').classList.remove('active');
+  });
+</script>
+</body>
+</html>

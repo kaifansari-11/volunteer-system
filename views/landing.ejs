@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="landing-body">
+
+  <nav class="landing-nav">
+    <div class="landing-logo">
+      <div class="logo-icon"><i class="fa-solid fa-handshake-angle"></i></div>
+      VolunteerHub
+    </div>
+    <div class="landing-actions">
+      <% if (user) { %>
+        <a href="<%= user.role === 'admin' ? '/admin/dashboard' : '/volunteer/dashboard' %>" class="btn btn-primary">Go to Dashboard <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></a>
+      <% } else { %>
+        <a href="/auth/login" class="btn btn-ghost">Log In</a>
+        <a href="/auth/register" class="btn btn-primary">Join as Volunteer</a>
+      <% } %>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-content">
+      <div class="badge badge-approved" style="margin-bottom: 20px;"><i class="fa-solid fa-star" style="margin-right: 6px;"></i> Join 10,000+ Changemakers</div>
+      <h1 class="hero-title">Make a difference in your community today.</h1>
+      <p class="hero-subtitle">Connect with local events, use your unique skills, and track your volunteer hours—all in one place.</p>
+      <div class="hero-buttons">
+        <a href="/auth/register" class="btn btn-primary hero-btn">Start Volunteering Now</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="features">
+    <div class="features-header">
+      <h2>Why join VolunteerHub?</h2>
+      <p class="text-muted">Everything you need to make an impact, organized simply.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="color: var(--blue);"><i class="fa-solid fa-bullseye"></i></div>
+        <h3>Smart Skill Matching</h3>
+        <p>Don't just do anything—do what you're best at. We match your specific skills to the events that need them most.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="color: var(--green);"><i class="fa-solid fa-clock-rotate-left"></i></div>
+        <h3>Track Your Impact</h3>
+        <p>Every hour counts. Build your volunteer resume by tracking your logged hours and completed events right from your dashboard.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="color: var(--purple);"><i class="fa-solid fa-globe"></i></div>
+        <h3>Community Events</h3>
+        <p>Browse a real-time feed of local events, sign up with one click, and see how many other volunteers are joining you.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="landing-footer">
+    <div class="landing-logo" style="justify-content: center; margin-bottom: 16px;">
+      <div class="logo-icon"><i class="fa-solid fa-handshake-angle"></i></div> VolunteerHub
+    </div>
+    <p class="text-muted">© <%= new Date().getFullYear() %> VolunteerHub. Built to make a difference.</p>
+  </footer>
+
+</body>
+</html>
