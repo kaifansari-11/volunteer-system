@@ -5,7 +5,7 @@ const db = require('../db/connection');
 const { isGuest } = require('../middleware/auth');
 const { sendWelcomeEmail } = require('../utils/mailer');
 
-// GET /auth/login
+
 router.get('/login', isGuest, (req, res) => {
   res.render('auth/login', {
     title: 'Login – VolunteerHub',
@@ -14,7 +14,7 @@ router.get('/login', isGuest, (req, res) => {
   });
 });
 
-// POST /auth/login
+
 router.post('/login', isGuest, async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -39,7 +39,7 @@ router.post('/login', isGuest, async (req, res) => {
   }
 });
 
-// GET /auth/register
+
 router.get('/register', isGuest, (req, res) => {
   res.render('auth/register', {
     title: 'Register – VolunteerHub',
@@ -47,11 +47,11 @@ router.get('/register', isGuest, (req, res) => {
   });
 });
 
-// POST /auth/register
+
 router.post('/register', isGuest, async (req, res) => {
   const { name, email, password, phone, age, skills, availability } = req.body;
   try {
-    // Check if email exists
+    
     const [existing] = await db.execute('SELECT id FROM users WHERE email = ?', [email]);
     if (existing.length) {
       req.flash('error', 'This email is already registered.');
@@ -70,7 +70,7 @@ router.post('/register', isGuest, async (req, res) => {
       [userResult.insertId, phone, age, skillsArray, availability, 'pending']
     );
 
-    // Send welcome email (non-blocking)
+    
     sendWelcomeEmail(email, name);
 
     req.flash('success', 'Registration successful! Please login.');
@@ -82,12 +82,12 @@ router.post('/register', isGuest, async (req, res) => {
   }
 });
 
-// GET /auth/success
+
 router.get('/success', (req, res) => {
   res.render('auth/success', { title: 'Registration Successful – VolunteerHub' });
 });
 
-// POST /auth/logout
+
 router.post('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/auth/login'));
 });

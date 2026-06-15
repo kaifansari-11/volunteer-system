@@ -1,8 +1,8 @@
--- Create database
+
 CREATE DATABASE IF NOT EXISTS volunteer_db;
 USE volunteer_db;
 
--- Users table
+
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Volunteers table
+
 CREATE TABLE IF NOT EXISTS volunteers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS volunteers (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Activity log table (for admin audit trail)
+
 CREATE TABLE IF NOT EXISTS activity_logs (
   id INT AUTO_INCREMENT PRIMARY KEY,
   admin_id INT,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS activity_logs (
   FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE SET NULL
 );
 
--- Notifications table
+
 CREATE TABLE IF NOT EXISTS notifications (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS notifications (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Events table (bonus module)
+
 CREATE TABLE IF NOT EXISTS events (
   id INT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(200) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS events (
   FOREIGN KEY (created_by) REFERENCES users(id)
 );
 
--- Event volunteers (many-to-many)
+
 CREATE TABLE IF NOT EXISTS event_volunteers (
   id INT AUTO_INCREMENT PRIMARY KEY,
   event_id INT NOT NULL,

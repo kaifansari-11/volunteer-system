@@ -72,7 +72,7 @@ async function ensureAdmin() {
         "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, 'admin')",
         ['Super Admin', process.env.ADMIN_EMAIL || 'admin@volunteer.com', hashed]
       );
-      console.log('✅ Default admin created: admin@volunteer.com / Admin@123');
+      console.log(' Default admin created: admin@volunteer.com / Admin@123');
     }
   } catch (err) {
     console.error('Admin setup error:', err.message);
@@ -81,6 +81,6 @@ async function ensureAdmin() {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
-  console.log(`🚀 VolunteerHub running at http://localhost:${PORT}`);
+  console.log(` VolunteerHub running at http://localhost:${PORT}`);
   await ensureAdmin();
 });

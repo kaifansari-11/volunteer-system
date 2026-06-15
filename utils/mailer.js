@@ -15,7 +15,7 @@ async function sendWelcomeEmail(to, name) {
   const mailOptions = {
     from: `"VolunteerHub" <${process.env.MAIL_USER}>`,
     to,
-    subject: '🎉 Welcome to VolunteerHub – Registration Successful!',
+    subject: ' Welcome to VolunteerHub – Registration Successful!',
     html: `
       <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb; border-radius: 12px; overflow: hidden;">
         <div style="background: linear-gradient(135deg, #2563eb, #7c3aed); padding: 40px; text-align: center;">
@@ -23,7 +23,7 @@ async function sendWelcomeEmail(to, name) {
           <p style="color: rgba(255,255,255,0.8); margin-top: 8px;">Making a difference, together.</p>
         </div>
         <div style="padding: 40px; background: white;">
-          <h2 style="color: #1e293b;">Welcome, ${name}! 🙌</h2>
+          <h2 style="color: #1e293b;">Welcome, ${name}! </h2>
           <p style="color: #64748b; line-height: 1.6;">
             Thank you for registering as a volunteer. Your application has been received and is currently under review.
           </p>
@@ -55,8 +55,8 @@ async function sendWelcomeEmail(to, name) {
 
 async function sendStatusEmail(to, name, status) {
   const statusMap = {
-    approved: { emoji: '✅', color: '#16a34a', message: 'Your volunteer application has been approved! You can now join events and start making a difference.' },
-    rejected: { emoji: '❌', color: '#dc2626', message: 'After careful review, we were unable to approve your application at this time. You may re-apply in the future.' }
+    approved: { emoji: '', color: '#16a34a', message: 'Your volunteer application has been approved! You can now join events and start making a difference.' },
+    rejected: { emoji: '', color: '#dc2626', message: 'After careful review, we were unable to approve your application at this time. You may re-apply in the future.' }
   };
 
   const { emoji, color, message } = statusMap[status] || {};

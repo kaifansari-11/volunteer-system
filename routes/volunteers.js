@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../db/connection');
 const { isAuthenticated } = require('../middleware/auth');
 
-// GET /volunteer/dashboard
+
 router.get('/dashboard', isAuthenticated, async (req, res) => {
   try {
     const userId = req.session.user.id;
@@ -51,7 +51,7 @@ router.get('/dashboard', isAuthenticated, async (req, res) => {
   }
 });
 
-// GET /volunteer/profile
+
 router.get('/profile', isAuthenticated, async (req, res) => {
   const [rows] = await db.execute(
     `SELECT v.*, u.name, u.email FROM volunteers v 
@@ -67,7 +67,7 @@ router.get('/profile', isAuthenticated, async (req, res) => {
   });
 });
 
-// POST /volunteer/profile (update)
+
 router.post('/profile', isAuthenticated, async (req, res) => {
   const { phone, age, skills, availability } = req.body;
   const skillsStr = Array.isArray(skills) ? skills.join(',') : skills;
@@ -83,7 +83,7 @@ router.post('/profile', isAuthenticated, async (req, res) => {
   res.redirect('/volunteer/profile');
 });
 
-// GET /volunteer/events
+
 router.get('/events', isAuthenticated, async (req, res) => {
   const [events] = await db.execute(
     'SELECT * FROM events ORDER BY event_date ASC'
@@ -97,7 +97,7 @@ router.get('/events', isAuthenticated, async (req, res) => {
   });
 });
 
-// POST /volunteer/events/:id/join
+
 router.post('/events/:id/join', isAuthenticated, async (req, res) => {
   try {
     const [vol] = await db.execute('SELECT id FROM volunteers WHERE user_id = ?', [req.session.user.id]);

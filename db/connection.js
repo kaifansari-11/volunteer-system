@@ -11,7 +11,6 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
   
-  // 👇 This prevents TiDB from dropping idle connections (Fixes ECONNRESET) 👇
   enableKeepAlive: true,
   keepAliveInitialDelay: 0,
   

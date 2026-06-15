@@ -5,7 +5,7 @@ const { isAdmin } = require('../middleware/auth');
 const { sendStatusEmail } = require('../utils/mailer');
 const { stringify } = require('csv-stringify');
 
-// GET /admin/dashboard
+
 router.get('/dashboard', isAdmin, async (req, res) => {
   try {
     const [[{ total }]] = await db.execute('SELECT COUNT(*) as total FROM volunteers');
@@ -22,7 +22,7 @@ router.get('/dashboard', isAdmin, async (req, res) => {
       "SELECT COUNT(*) as rejected FROM volunteers WHERE status = 'rejected'"
     );
 
-    // Skills distribution
+    
     const [allSkills] = await db.execute('SELECT skills FROM volunteers');
     const skillCount = {};
     allSkills.forEach(r => {
@@ -35,7 +35,7 @@ router.get('/dashboard', isAdmin, async (req, res) => {
       .sort((a, b) => b[1] - a[1])
       .slice(0, 6);
 
-    // Recent registrations
+    
     const [recent] = await db.execute(
       `SELECT v.*, u.name, u.email FROM volunteers v 
        JOIN users u ON v.user_id = u.id 
@@ -43,7 +43,7 @@ router.get('/dashboard', isAdmin, async (req, res) => {
     );
 
 
-    // Monthly stats (last 6 months)
+    
     const [monthly] = await db.execute(`
       SELECT DATE_FORMAT(created_at, '%b %Y') as month, COUNT(*) as count
       FROM volunteers
@@ -76,7 +76,7 @@ router.get('/dashboard', isAdmin, async (req, res) => {
   }
 });
 
-// GET /admin/volunteers
+
 router.get('/volunteers', isAdmin, async (req, res) => {
   const { search, skill, status, sort } = req.query;
   let query = `
@@ -107,7 +107,7 @@ router.get('/volunteers', isAdmin, async (req, res) => {
 
   const [volunteers] = await db.execute(query, params);
 
-  // Get unique skills for filter dropdown
+  
   const [skillRows] = await db.execute('SELECT DISTINCT skills FROM volunteers WHERE skills IS NOT NULL');
   const allSkills = [...new Set(skillRows.flatMap(r => r.skills.split(',').map(s => s.trim())))].filter(Boolean);
 
@@ -122,7 +122,7 @@ router.get('/volunteers', isAdmin, async (req, res) => {
   });
 });
 
-// GET /admin/volunteers/:id
+
 router.get('/volunteers/:id', isAdmin, async (req, res) => {
   const [rows] = await db.execute(
     `SELECT v.*, u.name, u.email FROM volunteers v 
@@ -148,7 +148,7 @@ router.get('/volunteers/:id', isAdmin, async (req, res) => {
   });
 });
 
-// POST /admin/volunteers/:id/status
+
 router.post('/volunteers/:id/status', isAdmin, async (req, res) => {
   const { status } = req.body;
   try {
@@ -161,17 +161,17 @@ router.post('/volunteers/:id/status', isAdmin, async (req, res) => {
 
     await db.execute('UPDATE volunteers SET status = ? WHERE id = ?', [status, req.params.id]);
 
-    // Log activity
+   
     await db.execute(
       'INSERT INTO activity_logs (admin_id, action, target_volunteer_id, details) VALUES (?, ?, ?, ?)',
       [req.session.user.id, 'status_update', req.params.id, `Status changed to ${status}`]
     );
 
-    // Send status email
+    
     if (status === 'approved' || status === 'rejected') {
       sendStatusEmail(rows[0].email, rows[0].name, status);
 
-      // Add notification
+      
       await db.execute(
         'INSERT INTO notifications (user_id, message) VALUES (?, ?)',
         [rows[0].user_id, `Your volunteer application has been ${status}.`]
@@ -185,7 +185,7 @@ router.post('/volunteers/:id/status', isAdmin, async (req, res) => {
   res.redirect(`/admin/volunteers/${req.params.id}`);
 });
 
-// POST /admin/volunteers/:id/notes
+
 router.post('/volunteers/:id/notes', isAdmin, async (req, res) => {
   const { notes } = req.body;
   try {
@@ -201,7 +201,7 @@ router.post('/volunteers/:id/notes', isAdmin, async (req, res) => {
   res.redirect(`/admin/volunteers/${req.params.id}`);
 });
 
-// POST /admin/volunteers/:id/hours
+
 router.post('/volunteers/:id/hours', isAdmin, async (req, res) => {
   const { hours } = req.body;
   try {
@@ -213,7 +213,7 @@ router.post('/volunteers/:id/hours', isAdmin, async (req, res) => {
   res.redirect(`/admin/volunteers/${req.params.id}`);
 });
 
-// GET /admin/export (CSV)
+
 router.get('/export', isAdmin, async (req, res) => {
   const { status } = req.query;
   let query = `SELECT u.name, u.email, v.phone, v.age, v.skills, v.availability, v.status, v.hours_logged, v.created_at
@@ -247,7 +247,7 @@ router.get('/export', isAdmin, async (req, res) => {
   });
 });
 
-// GET /admin/events
+
 router.get('/events', isAdmin, async (req, res) => {
   const [events] = await db.execute(
     `SELECT e.*, u.name as creator, 
@@ -264,7 +264,7 @@ router.get('/events', isAdmin, async (req, res) => {
   });
 });
 
-// POST /admin/events
+
 router.post('/events', isAdmin, async (req, res) => {
   const { title, description, event_date, location, required_skills, max_volunteers } = req.body;
   try {
@@ -279,7 +279,7 @@ router.post('/events', isAdmin, async (req, res) => {
   res.redirect('/admin/events');
 });
 
-// DELETE /admin/events/:id
+
 router.post('/events/:id/delete', isAdmin, async (req, res) => {
   await db.execute('DELETE FROM events WHERE id = ?', [req.params.id]);
   req.flash('success', 'Event deleted.');
